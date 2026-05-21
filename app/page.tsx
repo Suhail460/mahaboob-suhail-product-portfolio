@@ -107,12 +107,12 @@ export default function Home() {
               <div className="absolute inset-0 rounded-full bg-indigo-500/20 blur-3xl"></div>
 
               <Image
-                src="/images/temp.profile.jpg"
-                alt="Profile"
-                width={400}
-                height={400}
-                className="relative rounded-full border border-zinc-800 object-contain bg-zinc-900 shadow-2xl"
-              />
+  src="/images/temp-profile.jpg"
+  alt="Profile"
+  width={400}
+  height={400}
+  className="h-full w-full rounded-full object-cover"
+/>
 
             </div>
 
