@@ -107,7 +107,7 @@ export default function Home() {
               <div className="absolute inset-0 rounded-full bg-indigo-500/20 blur-3xl"></div>
 
               <Image
-                src="/images/profile.jpg"
+                src="/images/temp.profile.jpg"
                 alt="Profile"
                 width={400}
                 height={400}
