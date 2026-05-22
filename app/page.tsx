@@ -74,8 +74,9 @@ export default function Home() {
               </a>
 
               <a
-                href="/mmahaboob-suhail-resume.pdf"
+                href="/resume/mmahaboob-suhail-resume.pdf"
                 target="_blank"
+                download
                 className="flex items-center gap-2 rounded-2xl border border-zinc-700 px-6 py-3 text-sm font-semibold transition hover:border-zinc-400"
               >
                 <FaFileDownload />
@@ -751,6 +752,7 @@ export default function Home() {
     <a
       href="/resume/mmahaboob-suhail-resume.pdf"
       target="_blank"
+      download
       className="hover:text-white transition"
     >
       Resume
