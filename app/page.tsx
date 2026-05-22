@@ -108,7 +108,7 @@ export default function Home() {
 
               <Image
   src="/images/temp-profile.jpg"
-  alt="Profile"
+  alt="M Mahaboob Suhail profile photo"
   width={400}
   height={400}
   className="h-full w-full rounded-full object-contain"
