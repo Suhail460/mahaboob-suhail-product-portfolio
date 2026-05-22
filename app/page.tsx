@@ -74,7 +74,7 @@ export default function Home() {
               </a>
 
               <a
-                href="/resume/mmahaboob-suhail-resume.pdf"
+                href="/mmahaboob-suhail-resume.pdf"
                 target="_blank"
                 className="flex items-center gap-2 rounded-2xl border border-zinc-700 px-6 py-3 text-sm font-semibold transition hover:border-zinc-400"
               >
