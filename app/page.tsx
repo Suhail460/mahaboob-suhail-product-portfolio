@@ -74,7 +74,7 @@ export default function Home() {
               </a>
 
               <a
-                href="/resume/resume.pdf"
+                href="/resume/mmahaboob-suhail-resume.pdf"
                 target="_blank"
                 className="flex items-center gap-2 rounded-2xl border border-zinc-700 px-6 py-3 text-sm font-semibold transition hover:border-zinc-400"
               >
@@ -749,7 +749,7 @@ export default function Home() {
   <div className="flex gap-6 text-sm">
 
     <a
-      href="/resume/resume.pdf"
+      href="/resume/mmahaboob-suhail-resume.pdf"
       target="_blank"
       className="hover:text-white transition"
     >
