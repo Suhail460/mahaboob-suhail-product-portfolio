@@ -104,14 +104,14 @@ export default function Home() {
 
             <div className="relative">
 
-              <div className="absolute inset-0 rounded-full bg-indigo-500/20 blur-3xl"></div>
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500/10 to-purple-500/10 blur-2xl"></div>
 
               <Image
   src="/images/temp-profile.jpg"
   alt="Profile"
   width={400}
   height={400}
-  className="h-full w-full rounded-full object-cover"
+  className="h-full w-full rounded-full object-contain"
 />
 
             </div>
