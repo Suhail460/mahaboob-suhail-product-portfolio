@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { FaLinkedin, FaFileDownload } from "react-icons/fa";
 import Link from "next/link";
+import { trackEvent } from "@/lib/gtag"
 
 export default function Home() {
   return (
@@ -78,6 +79,13 @@ export default function Home() {
                 target="_blank"
                 download
                 className="flex items-center gap-2 rounded-2xl border border-zinc-700 px-6 py-3 text-sm font-semibold transition hover:border-zinc-400"
+                onClick={() =>
+  trackEvent(
+    "resume_download",
+    "engagement",
+    "Resume Button"
+  )
+}
               >
                 <FaFileDownload />
                 Resume
@@ -754,6 +762,13 @@ export default function Home() {
       target="_blank"
       download
       className="hover:text-white transition"
+      onClick={() =>
+  trackEvent(
+    "resume_download",
+    "engagement",
+    "Resume Button"
+  )
+}
     >
       Resume
     </a>
