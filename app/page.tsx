@@ -738,6 +738,13 @@ export default function Home() {
               href="https://linkedin.com/in/mmahaboobsuhail"
               target="_blank"
               className="rounded-2xl border border-zinc-700 px-6 py-3 text-sm font-semibold transition hover:border-zinc-400"
+              onClick={() =>
+  trackEvent(
+    "linkedin_click",
+    "social",
+    "LinkedIn Profile"
+  )
+}
             >
               LinkedIn
             </a>
@@ -777,6 +784,13 @@ export default function Home() {
       href="https://www.linkedin.com/in/mmahaboobsuhail"
       target="_blank"
       className="hover:text-white transition"
+      onClick={() =>
+  trackEvent(
+    "linkedin_click",
+    "social",
+    "LinkedIn Profile"
+  )
+}
     >
       LinkedIn
     </a>
