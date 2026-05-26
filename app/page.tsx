@@ -39,7 +39,12 @@ export default function Home() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative flex min-h-screen items-center justify-center px-6">
+      <motion.section
+       initial={{ opacity: 0, y: 40 }}
+       whileInView={{ opacity: 1, y: 0 }}
+       transition={{ duration: 0.7 }}
+       viewport={{ once: true }}
+       className="relative flex min-h-screen items-center justify-center px-6">
 
         <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-2 md:items-center">
 
@@ -129,7 +134,7 @@ export default function Home() {
 
         </div>
 
-      </section>
+      </motion.section>
 
       {/* ABOUT */}
       <section
