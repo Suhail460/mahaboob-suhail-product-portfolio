@@ -1,10 +1,11 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion"
+import { useEffect, useRef, useState, useCallback } from "react"
+import { motion, useScroll, useMotionValueEvent } from "framer-motion"
 import { FaFileDownload, FaLinkedin, FaGithub, FaArrowDown, FaRocket, FaArrowRight } from "react-icons/fa"
 
 const FRAME_COUNT = 100
+const INITIAL_PRELOAD_COUNT = 10
 
 function getFrameUrl(index: number) {
   const paddedIndex = String(index + 1).padStart(4, "0")
@@ -15,48 +16,22 @@ export function HeroCanvasScroll() {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imagesRef = useRef<HTMLImageElement[]>([])
+  const animFrameIdRef = useRef<number | null>(null)
+
   const [imagesLoaded, setImagesLoaded] = useState(false)
   const [loadProgress, setLoadProgress] = useState(0)
-  const [currentFrame, setCurrentFrame] = useState(0)
+  const [currentFrameIndex, setCurrentFrameIndex] = useState(0)
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   })
 
-  // Preload all 100 frames into memory
-  useEffect(() => {
-    let loadedCount = 0
-    const loadedImages: HTMLImageElement[] = []
-
-    for (let i = 0; i < FRAME_COUNT; i++) {
-      const img = new Image()
-      img.src = getFrameUrl(i)
-      img.onload = () => {
-        loadedCount++
-        setLoadProgress(Math.round((loadedCount / FRAME_COUNT) * 100))
-        if (loadedCount === FRAME_COUNT) {
-          setImagesLoaded(true)
-        }
-      }
-      img.onerror = () => {
-        loadedCount++
-        setLoadProgress(Math.round((loadedCount / FRAME_COUNT) * 100))
-        if (loadedCount === FRAME_COUNT) {
-          setImagesLoaded(true)
-        }
-      }
-      loadedImages.push(img)
-    }
-
-    imagesRef.current = loadedImages
-  }, [])
-
-  // Draw current frame onto canvas with proper scaling & aspect ratio
-  const drawFrame = (frameIndex: number) => {
+  // Canvas drawing function optimized with rAF
+  const drawFrame = useCallback((frameIndex: number) => {
     const canvas = canvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext("2d")
+    const ctx = canvas.getContext("2d", { alpha: false })
     if (!ctx) return
 
     const img = imagesRef.current[frameIndex]
@@ -73,7 +48,6 @@ export function HeroCanvasScroll() {
 
     ctx.save()
     ctx.scale(dpr, dpr)
-    ctx.clearRect(0, 0, displayWidth, displayHeight)
 
     // Calculate aspect fill cover logic
     const imgRatio = img.naturalWidth / img.naturalHeight
@@ -93,28 +67,77 @@ export function HeroCanvasScroll() {
 
     ctx.drawImage(img, offsetX, offsetY, renderW, renderH)
     ctx.restore()
-  }
+  }, [])
 
-  // Handle frame drawing on scroll progress change
+  // Optimized two-tier image preloading (instant initial 10 frames, then remaining 90 in background)
+  useEffect(() => {
+    let loadedCount = 0
+    const loadedImages: HTMLImageElement[] = new Array(FRAME_COUNT)
+
+    // Tier 1: Preload initial 10 frames
+    for (let i = 0; i < INITIAL_PRELOAD_COUNT; i++) {
+      const img = new Image()
+      img.src = getFrameUrl(i)
+      img.onload = () => {
+        loadedCount++
+        setLoadProgress(Math.round((loadedCount / FRAME_COUNT) * 100))
+        if (loadedCount >= INITIAL_PRELOAD_COUNT) {
+          setImagesLoaded(true)
+        }
+      }
+      loadedImages[i] = img
+    }
+
+    // Tier 2: Stream remaining 90 frames in background
+    setTimeout(() => {
+      for (let i = INITIAL_PRELOAD_COUNT; i < FRAME_COUNT; i++) {
+        const img = new Image()
+        img.src = getFrameUrl(i)
+        img.onload = () => {
+          loadedCount++
+          setLoadProgress(Math.round((loadedCount / FRAME_COUNT) * 100))
+        }
+        loadedImages[i] = img
+      }
+    }, 100)
+
+    imagesRef.current = loadedImages
+  }, [])
+
+  // Handle frame drawing on scroll progress change with rAF lock
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     const frameIndex = Math.min(FRAME_COUNT - 1, Math.max(0, Math.floor(latest * FRAME_COUNT)))
-    setCurrentFrame(frameIndex)
-    drawFrame(frameIndex)
+    if (frameIndex !== currentFrameIndex) {
+      setCurrentFrameIndex(frameIndex)
+      if (animFrameIdRef.current !== null) {
+        cancelAnimationFrame(animFrameIdRef.current)
+      }
+      animFrameIdRef.current = requestAnimationFrame(() => {
+        drawFrame(frameIndex)
+      })
+    }
   })
 
-  // Initial render when images load
+  // Initial draw once tier-1 images load
   useEffect(() => {
     if (imagesLoaded) {
       drawFrame(0)
     }
-  }, [imagesLoaded])
+  }, [imagesLoaded, drawFrame])
 
   // Handle window resize
   useEffect(() => {
-    const handleResize = () => drawFrame(currentFrame)
-    window.addEventListener("resize", handleResize)
+    const handleResize = () => {
+      if (animFrameIdRef.current !== null) {
+        cancelAnimationFrame(animFrameIdRef.current)
+      }
+      animFrameIdRef.current = requestAnimationFrame(() => {
+        drawFrame(currentFrameIndex)
+      })
+    }
+    window.addEventListener("resize", handleResize, { passive: true })
     return () => window.removeEventListener("resize", handleResize)
-  }, [currentFrame])
+  }, [currentFrameIndex, drawFrame])
 
   return (
     <div ref={containerRef} className="relative h-[280vh] bg-[#09090b]">
@@ -123,27 +146,9 @@ export function HeroCanvasScroll() {
         {/* Background 24fps Canvas Frame Player */}
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
           style={{ opacity: imagesLoaded ? 0.75 : 0 }}
         />
-
-        {/* Loading Screen Indicator before frames finish preloading */}
-        {!imagesLoaded && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#09090b] text-white z-20">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="h-3 w-3 rounded-full bg-[#e58e39] animate-pulse" />
-              <p className="font-mono-tag text-xs uppercase tracking-widest text-neutral-400">
-                LOADING CINEMATIC FRAMES ({loadProgress}%)
-              </p>
-            </div>
-            <div className="w-48 h-1 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[#e58e39] transition-all duration-200"
-                style={{ width: `${loadProgress}%` }}
-              />
-            </div>
-          </div>
-        )}
 
         {/* Ambient Dark Gradient Overlays for High Text Contrast */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/60 to-[#09090b]/40 pointer-events-none z-10" />
@@ -175,7 +180,7 @@ export function HeroCanvasScroll() {
             </motion.p>
           </div>
 
-          {/* Center Main Headline & Narrative (No Profile Photo, No "Founder of Discovery Dojo") */}
+          {/* Center Main Headline & Narrative */}
           <div className="my-auto space-y-6 max-w-4xl">
             <motion.h1
               initial={{ opacity: 0, y: 25 }}
