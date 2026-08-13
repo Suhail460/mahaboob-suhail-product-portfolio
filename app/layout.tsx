@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/providers/theme-provider"
 import { LenisProvider } from "@/components/providers/lenis-provider"
 import { Preloader } from "@/components/ui/preloader"
 import { Navbar } from "@/components/layout/navbar"
+import { SplashCursor } from "@/components/ui/splash-cursor"
 import { Analytics } from "@vercel/analytics/next"
 import Script from "next/script"
 
@@ -134,6 +135,7 @@ export default function RootLayout({
         <LenisProvider>
           <Preloader />
           <ThemeProvider>
+            <SplashCursor />
             <Navbar />
             {children}
           </ThemeProvider>
