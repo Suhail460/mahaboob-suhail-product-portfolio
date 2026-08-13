@@ -11,6 +11,7 @@ const steps = [
     subtitle: "Mining customer escalations & support signals",
     description: "Analyzing high-frequency support tickets, churn logs, and escalation trends to isolate core product friction and unarticulated user needs.",
     deliverables: ["Support Ticket Data Mining", "User Friction Audits", "Customer Escalation Mapping"],
+    goal: "Isolate Root Friction & Churn Signals",
     color: "#e58e39"
   },
   {
@@ -19,6 +20,7 @@ const steps = [
     subtitle: "Formulating product strategy & PRDs",
     description: "Transforming raw customer signals into structured PRDs, user stories, low-fidelity wireframes, and testable product discovery hypotheses.",
     deliverables: ["PRD Specification Docs", "Hypothesis Matrix", "Interactive Wireframes"],
+    goal: "Actionable PRDs & Validated User Stories",
     color: "#f4a261"
   },
   {
@@ -27,6 +29,7 @@ const steps = [
     subtitle: "Cross-functional Agile alignment",
     description: "Partnering closely with software engineers, UI/UX designers, and QA to execute sprint backlogs and deliver polished features on schedule.",
     deliverables: ["Sprint Backlog Grooming", "Design System Audits", "Cross-Functional Alignment"],
+    goal: "Predictable On-Time Agile Sprint Delivery",
     color: "#81c784"
   },
   {
@@ -35,6 +38,7 @@ const steps = [
     subtitle: "Tracking outcome metrics & optimization",
     description: "Monitoring key product telemetry post-release—tracking resolution speeds, retention impact, adoption rates, and operational efficiency gains.",
     deliverables: ["Telemetry Dashboard", "Post-Launch Retrospectives", "Operational Cost Savings"],
+    goal: "Quantifiable Retention & Operational Cost ROI",
     color: "#b39ddb"
   }
 ]
@@ -149,8 +153,8 @@ export function ProcessStepsSection() {
                             <p className="font-mono-tag text-xs uppercase text-neutral-400 mb-2 font-bold">
                               OPERATIONAL GOAL
                             </p>
-                            <p className="text-lg font-bold" style={{ color: step.color }}>
-                              Zero Friction Product Delivery
+                            <p className="text-base md:text-lg font-bold" style={{ color: step.color }}>
+                              {step.goal}
                             </p>
                           </div>
                         </div>
