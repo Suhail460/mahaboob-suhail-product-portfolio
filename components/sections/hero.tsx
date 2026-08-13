@@ -55,18 +55,6 @@ export function Hero() {
             >
               <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold uppercase text-white leading-[1.05] tracking-tight">
                 FROM CUSTOMER ESCALATIONS TO{" "}
-                <span className="inline-flex items-center align-middle mx-1.5 sm:mx-2.5">
-                  <span className="relative w-14 h-8 sm:w-20 sm:h-11 md:w-24 md:h-12 rounded-full overflow-hidden border border-white/20 shadow-xl inline-block bg-neutral-900">
-                    <Image
-                      src="/images/temp-profile.jpg"
-                      alt="M Mahaboob Suhail"
-                      fill
-                      className="object-cover"
-                      sizes="100px"
-                      priority
-                    />
-                  </span>
-                </span>
                 <span className="text-[#e58e39]">PRODUCT STRATEGY.</span>
               </h1>
             </motion.div>
