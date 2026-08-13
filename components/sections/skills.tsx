@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { skillsRow1, skillsRow2 } from "@/lib/data"
 import { FaCheckCircle, FaRobot, FaBrain, FaBolt, FaCode } from "react-icons/fa"
 
 const categories = [
@@ -30,15 +31,20 @@ const categories = [
   },
 ]
 
+const pillColors = ["#e58e39", "#f4a261", "#81c784", "#b39ddb", "#e58e39", "#81c784"]
+
 export function SkillsSection() {
+  const tickerRow1 = [...skillsRow1, ...skillsRow1, ...skillsRow1]
+  const tickerRow2 = [...skillsRow2, ...skillsRow2, ...skillsRow2]
+
   return (
-    <section id="skills" className="py-28 md:py-36 relative border-t border-white/10 bg-[#09090b]">
-      <div className="max-w-7xl mx-auto px-4 md:px-12">
+    <section id="skills" className="py-28 md:py-36 relative border-t border-white/10 bg-[#09090b] overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 md:px-12 mb-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <span className="h-3 w-3 rounded-full bg-[#81c784]" />
+              <span className="h-3 w-3 rounded-full bg-[#81c784] animate-pulse" />
               <p className="font-mono-tag text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-[#81c784]">
                 CORE COMPETENCIES & TOOLKIT
               </p>
@@ -51,8 +57,64 @@ export function SkillsSection() {
             Categorized capabilities spanning AI product building, growth teardowns, operational workflows, and technical delivery.
           </p>
         </div>
+      </div>
 
-        {/* Double-Bezel Categorized Competency Grid */}
+      {/* INFINITE SCROLLING TICKER RIBBON ROW 1 (Left Direction, Smooth 40s duration) */}
+      <div className="relative w-full overflow-hidden py-3 bg-white/5 border-y border-white/10 mb-4 backdrop-blur-sm">
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#09090b] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#09090b] to-transparent z-10 pointer-events-none" />
+
+        <motion.div
+          animate={{ x: ["0%", "-33.33%"] }}
+          transition={{ repeat: Infinity, ease: "linear", duration: 36 }}
+          className="flex items-center gap-4 w-max"
+        >
+          {tickerRow1.map((skill, idx) => {
+            const color = pillColors[idx % pillColors.length]
+            return (
+              <div
+                key={skill + idx}
+                className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#121215] border border-white/10 hover:border-white/30 hover:scale-105 transition-all cursor-pointer whitespace-nowrap group shrink-0 shadow-lg"
+              >
+                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
+                <span className="font-mono-tag text-xs md:text-sm font-bold uppercase text-neutral-200 group-hover:text-white transition-colors">
+                  {skill}
+                </span>
+              </div>
+            )
+          })}
+        </motion.div>
+      </div>
+
+      {/* INFINITE SCROLLING TICKER RIBBON ROW 2 (Right Direction, Smooth 40s duration) */}
+      <div className="relative w-full overflow-hidden py-3 bg-[#121215] border-b border-white/10 mb-16 backdrop-blur-sm">
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#09090b] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#09090b] to-transparent z-10 pointer-events-none" />
+
+        <motion.div
+          animate={{ x: ["-33.33%", "0%"] }}
+          transition={{ repeat: Infinity, ease: "linear", duration: 36 }}
+          className="flex items-center gap-4 w-max"
+        >
+          {tickerRow2.map((skill, idx) => {
+            const color = pillColors[(idx + 2) % pillColors.length]
+            return (
+              <div
+                key={skill + idx}
+                className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 hover:border-white/30 hover:scale-105 transition-all cursor-pointer whitespace-nowrap group shrink-0 shadow-lg"
+              >
+                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
+                <span className="font-mono-tag text-xs md:text-sm font-bold uppercase text-neutral-200 group-hover:text-white transition-colors">
+                  {skill}
+                </span>
+              </div>
+            )
+          })}
+        </motion.div>
+      </div>
+
+      {/* Double-Bezel Categorized Competency Grid */}
+      <div className="max-w-7xl mx-auto px-4 md:px-12">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((cat, i) => {
             const Icon = cat.icon
