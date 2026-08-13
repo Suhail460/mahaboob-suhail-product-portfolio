@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 const milestones = [
   { year: "2018", label: "Customer Operations", detail: "First role handling high-volume customer support & technical issues", color: "#e58e39" },
   { year: "2022", label: "Support Specialist II", detail: "Managed 700+ monthly technical interactions with high CSAT", color: "#b39ddb" },
-  { year: "2024", label: "Lead Support Specialist", detail: "Led team to 98% resolution rate & 40% efficiency gains", color: "#81c784" },
+  { year: "2024", label: "Team Lead", detail: "Led team to 98% resolution rate & 40% efficiency gains", color: "#81c784" },
   { year: "2025+", label: "Product Analyst", detail: "Transitioned to growth-focused product strategy & Discovery Dojo", color: "#f4a261" },
 ]
 
