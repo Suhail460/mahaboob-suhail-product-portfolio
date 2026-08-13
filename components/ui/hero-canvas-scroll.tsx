@@ -34,7 +34,7 @@ export function HeroCanvasScroll() {
   const nameOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0])
   const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0])
 
-  // Sharp, crystal clear canvas drawing function (100% opacity, high DPR)
+  // Sharp, crystal clear canvas drawing function (True Object-Cover math: 0% black bars)
   const drawFrame = useCallback((frameIndex: number) => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -59,21 +59,23 @@ export function HeroCanvasScroll() {
     ctx.imageSmoothingEnabled = true
     ctx.imageSmoothingQuality = "high"
 
-    // Aspect fill cover logic
-    const imgRatio = img.naturalWidth / img.naturalHeight
-    const canvasRatio = displayWidth / displayHeight
-    let renderW = displayWidth
-    let renderH = displayHeight
-    let offsetX = 0
-    let offsetY = 0
+    // True Object-Cover fill cover logic (Zero black bars top, bottom, left or right)
+    const imgAspect = img.naturalWidth / img.naturalHeight
+    const canvasAspect = displayWidth / displayHeight
 
-    if (canvasRatio > imgRatio) {
-      renderH = displayWidth / imgRatio
-      offsetY = (displayHeight - renderH) / 2
+    let renderW: number
+    let renderH: number
+
+    if (canvasAspect > imgAspect) {
+      renderW = displayWidth
+      renderH = displayWidth / imgAspect
     } else {
-      renderW = displayHeight * imgRatio
-      offsetX = (displayWidth - renderW) / 2
+      renderH = displayHeight
+      renderW = displayHeight * imgAspect
     }
+
+    const offsetX = (displayWidth - renderW) / 2
+    const offsetY = (displayHeight - renderH) / 2
 
     ctx.drawImage(img, offsetX, offsetY, renderW, renderH)
     ctx.restore()
@@ -150,10 +152,10 @@ export function HeroCanvasScroll() {
   }, [currentFrameIndex, drawFrame])
 
   return (
-    <div ref={containerRef} className="relative h-[260vh] bg-[#09090b]">
+    <div ref={containerRef} className="relative h-[180vh] bg-[#09090b]">
       {/* Sticky Fullscreen Canvas & Motion Container */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between">
-        {/* Background 24fps Canvas Frame Player (100% Clear & Sharp) */}
+        {/* Background 24fps Canvas Frame Player (True Fullscreen Cover, 0% Black Bars) */}
         <canvas
           ref={canvasRef}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
@@ -161,7 +163,7 @@ export function HeroCanvasScroll() {
         />
 
         {/* Hero Overlay Container */}
-        <div className="relative z-20 max-w-7xl mx-auto px-4 md:px-12 pt-28 pb-10 flex flex-col justify-between h-full w-full pointer-events-none">
+        <div className="relative z-20 max-w-7xl mx-auto px-4 md:px-12 pt-24 pb-10 flex flex-col justify-between h-full w-full pointer-events-none">
           {/* Top Left Availability Status Badge (High-Contrast Dark Glass Badge with White Text) */}
           <div className="flex items-center justify-between pointer-events-auto">
             <div className="px-4 py-2 rounded-full bg-[#09090b]/90 backdrop-blur-xl border border-white/20 text-white font-mono-tag text-xs font-bold tracking-wider uppercase flex items-center gap-3 shadow-2xl">
