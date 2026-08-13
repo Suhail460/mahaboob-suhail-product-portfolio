@@ -1,11 +1,21 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
-import { FaLinkedin, FaEnvelope, FaGithub, FaFileDownload } from "react-icons/fa"
+import { FaLinkedin, FaEnvelope, FaGithub, FaFileDownload, FaCopy, FaCheck } from "react-icons/fa"
 
 export function ContactSection() {
+  const [copied, setCopied] = useState(false)
+  const email = "msuhail460@gmail.com"
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(email)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   return (
-    <section id="contact" className="py-24 md:py-36 relative border-t border-white/10 bg-[#09090b]">
+    <section id="contact" className="py-28 md:py-40 relative border-t border-white/10 bg-[#09090b]">
       <div className="max-w-7xl mx-auto px-4 md:px-12 text-center">
         <motion.div
           initial={{ opacity: 0, y: 25 }}
@@ -26,22 +36,40 @@ export function ContactSection() {
             Open to Associate Product Manager, Product Manager, Product Owner & Product Analyst opportunities.
           </p>
 
-          {/* Large Interactive Email Card */}
-          <div className="pt-8">
-            <a
-              href="mailto:msuhail460@gmail.com"
-              className="group inline-flex items-center gap-4 px-8 py-6 rounded-3xl bg-[#121215] border border-white/10 hover:border-[#e58e39] transition-all shadow-2xl"
-            >
-              <div className="p-4 rounded-2xl bg-[#e58e39] text-[#09090b] group-hover:scale-110 transition-transform">
-                <FaEnvelope size={24} />
+          {/* Double-Bezel Interactive Email Card with Copy Feature */}
+          <div className="pt-8 flex justify-center">
+            <div className="rounded-[2.5rem] bg-white/5 border border-white/10 p-2 shadow-2xl hover:border-[#e58e39]/40 transition-all max-w-2xl w-full">
+              <div className="rounded-[calc(2.5rem-0.5rem)] bg-[#121215] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-white/5 text-left">
+                <div className="flex items-center gap-4">
+                  <div className="p-4 rounded-2xl bg-[#e58e39] text-[#09090b] shrink-0">
+                    <FaEnvelope size={24} />
+                  </div>
+                  <div>
+                    <p className="font-mono-tag text-xs text-neutral-400 uppercase font-bold">DIRECT EMAIL ADDRESS</p>
+                    <p className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white">
+                      {email}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleCopyEmail}
+                  className="btn-studio group cursor-pointer shrink-0"
+                >
+                  {copied ? (
+                    <>
+                      <FaCheck size={14} className="text-[#81c784]" />
+                      <span className="text-[#81c784]">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaCopy size={13} className="text-[#e58e39]" />
+                      <span>Copy Email</span>
+                    </>
+                  )}
+                </button>
               </div>
-              <div className="text-left">
-                <p className="font-mono-tag text-xs text-neutral-400 uppercase">DIRECT EMAIL ADDRESS</p>
-                <p className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white group-hover:text-[#e58e39] transition-colors">
-                  msuhail460@gmail.com
-                </p>
-              </div>
-            </a>
+            </div>
           </div>
 
           {/* Social Action Pills */}
