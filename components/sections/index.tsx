@@ -1,0 +1,11 @@
+"use client"
+
+export { Hero } from "@/components/sections/hero"
+export { AboutSection } from "@/components/sections/about"
+export { ProcessStepsSection } from "@/components/sections/process-steps"
+export { ExperienceSection } from "@/components/sections/experience"
+export { ImpactStatsSection } from "@/components/sections/impact-stats"
+export { SkillsSection } from "@/components/sections/skills"
+export { CertificationsSection } from "@/components/sections/certifications"
+export { ContactSection } from "@/components/sections/contact"
+export { FooterSection } from "@/components/sections/footer"
