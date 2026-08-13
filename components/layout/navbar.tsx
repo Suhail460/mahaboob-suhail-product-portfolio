@@ -2,11 +2,20 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { CanvasMenu } from "@/components/layout/canvas-menu"
 import { FaFileDownload, FaLinkedin, FaFolderOpen, FaUser, FaBriefcase, FaEnvelope } from "react-icons/fa"
 
 export function Navbar() {
   const [canvasOpen, setCanvasOpen] = useState(false)
+  const pathname = usePathname()
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (pathname === "/") {
+      e.preventDefault()
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+  }
 
   return (
     <>
@@ -15,27 +24,31 @@ export function Navbar() {
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo Branding */}
-          <Link href="/" className="group flex items-center gap-2.5">
+          <Link
+            href="/"
+            onClick={handleLogoClick}
+            className="group flex items-center gap-2.5 cursor-pointer"
+          >
             <span className="h-2.5 w-2.5 rounded-full bg-[#e58e39] group-hover:scale-125 transition-transform" />
             <span className="font-mono-tag text-xs md:text-sm font-bold uppercase tracking-wider text-white">
               SUHAIL <span className="text-neutral-400 font-normal">// PORTFOLIO</span>
             </span>
           </Link>
 
-          {/* Quick Nav Anchors for Desktop */}
+          {/* Quick Nav Anchors for Desktop (Redirects to Home from any subpage) */}
           <nav className="hidden lg:flex items-center gap-8 font-mono-tag text-xs uppercase text-neutral-300 font-semibold">
-            <a href="#about" className="hover:text-white transition-colors flex items-center gap-1.5">
+            <Link href="/#about" className="hover:text-white transition-colors flex items-center gap-1.5">
               <FaUser size={10} className="text-[#e58e39]" /> About
-            </a>
-            <a href="#case-studies" className="hover:text-white transition-colors flex items-center gap-1.5">
+            </Link>
+            <Link href="/#case-studies" className="hover:text-white transition-colors flex items-center gap-1.5">
               <FaFolderOpen size={10} className="text-[#f4a261]" /> Case Studies
-            </a>
-            <a href="#experience" className="hover:text-white transition-colors flex items-center gap-1.5">
+            </Link>
+            <Link href="/#experience" className="hover:text-white transition-colors flex items-center gap-1.5">
               <FaBriefcase size={10} className="text-[#81c784]" /> Experience
-            </a>
-            <a href="#contact" className="hover:text-white transition-colors flex items-center gap-1.5">
+            </Link>
+            <Link href="/#contact" className="hover:text-white transition-colors flex items-center gap-1.5">
               <FaEnvelope size={10} className="text-[#b39ddb]" /> Contact
-            </a>
+            </Link>
           </nav>
 
           {/* Right Action Bar */}

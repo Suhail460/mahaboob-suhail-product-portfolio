@@ -1,6 +1,7 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
+import Link from "next/link"
 import { FaTimes, FaLinkedin, FaGithub, FaFileDownload, FaEnvelope } from "react-icons/fa"
 
 interface CanvasMenuProps {
@@ -9,13 +10,12 @@ interface CanvasMenuProps {
 }
 
 const menuItems = [
-  { label: "Home", href: "#hero" },
-  { label: "About", href: "#about" },
-  { label: "Case Studies", href: "#case-studies" },
-  { label: "Experience", href: "#experience" },
-  { label: "PM Framework", href: "#framework" },
-  { label: "Skills & Certs", href: "#skills" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/#hero" },
+  { label: "About", href: "/#about" },
+  { label: "Case Studies", href: "/#case-studies" },
+  { label: "Experience", href: "/#experience" },
+  { label: "Skills & Certs", href: "/#skills" },
+  { label: "Contact", href: "/#contact" },
 ]
 
 export function CanvasMenu({ isOpen, onClose }: CanvasMenuProps) {
@@ -31,21 +31,21 @@ export function CanvasMenu({ isOpen, onClose }: CanvasMenuProps) {
         >
           {/* Header Bar inside Canvas */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="font-mono-tag text-xs md:text-sm font-bold uppercase tracking-widest text-[#FF905F]">
+            <Link href="/" onClick={onClose} className="flex items-center gap-3 group cursor-pointer">
+              <span className="font-mono-tag text-xs md:text-sm font-bold uppercase tracking-widest text-[#e58e39]">
                 // SUHAIL PORTFOLIO
               </span>
-              <span className="hidden sm:inline-block text-xs uppercase px-2.5 py-0.5 rounded-full bg-[#AB9BFF]/20 text-[#AB9BFF] font-mono-tag">
+              <span className="hidden sm:inline-block text-xs uppercase px-2.5 py-0.5 rounded-full bg-[#b39ddb]/20 text-[#b39ddb] font-mono-tag">
                 Product Support Analyst
               </span>
-            </div>
+            </Link>
 
             <button
               onClick={onClose}
               className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-white/30 transition-all bg-white/5 text-sm uppercase font-mono-tag cursor-pointer"
             >
               <span>Close</span>
-              <FaTimes size={14} className="text-[#FF905F]" />
+              <FaTimes size={14} className="text-[#e58e39]" />
             </button>
           </div>
 
@@ -60,18 +60,18 @@ export function CanvasMenu({ isOpen, onClose }: CanvasMenuProps) {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.05 + 0.1 }}
                   >
-                    <a
+                    <Link
                       href={item.href}
                       onClick={onClose}
-                      className="group flex items-center justify-between text-2xl sm:text-4xl md:text-5xl font-extrabold uppercase tracking-tight py-2 border-b border-white/5 hover:border-[#FF905F] transition-all"
+                      className="group flex items-center justify-between text-2xl sm:text-4xl md:text-5xl font-extrabold uppercase tracking-tight py-2 border-b border-white/5 hover:border-[#e58e39] transition-all"
                     >
-                      <span className="group-hover:translate-x-4 transition-transform duration-300 group-hover:text-[#FF905F]">
+                      <span className="group-hover:translate-x-4 transition-transform duration-300 group-hover:text-[#e58e39]">
                         {item.label}
                       </span>
-                      <span className="font-mono-tag text-xs text-neutral-500 group-hover:text-[#FF905F]">
+                      <span className="font-mono-tag text-xs text-neutral-500 group-hover:text-[#e58e39]">
                         0{idx + 1}
                       </span>
-                    </a>
+                    </Link>
                   </motion.div>
                 ))}
               </div>
@@ -84,9 +84,9 @@ export function CanvasMenu({ isOpen, onClose }: CanvasMenuProps) {
                   </p>
                   <a
                     href="mailto:msuhail460@gmail.com"
-                    className="text-xl md:text-2xl font-bold hover:text-[#FF905F] transition-colors flex items-center gap-3"
+                    className="text-xl md:text-2xl font-bold hover:text-[#e58e39] transition-colors flex items-center gap-3"
                   >
-                    <FaEnvelope size={18} className="text-[#FF905F]" />
+                    <FaEnvelope size={18} className="text-[#e58e39]" />
                     msuhail460@gmail.com
                   </a>
                 </div>
@@ -100,7 +100,7 @@ export function CanvasMenu({ isOpen, onClose }: CanvasMenuProps) {
                       href="https://www.linkedin.com/in/mmahaboobsuhail"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-[#AB9BFF] hover:text-[#AB9BFF] text-sm font-medium transition-all"
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-[#b39ddb] hover:text-[#b39ddb] text-sm font-medium transition-all"
                     >
                       <FaLinkedin size={16} />
                       LinkedIn
@@ -109,7 +109,7 @@ export function CanvasMenu({ isOpen, onClose }: CanvasMenuProps) {
                       href="https://github.com/Suhail460"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-[#B7FF93] hover:text-[#B7FF93] text-sm font-medium transition-all"
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-[#81c784] hover:text-[#81c784] text-sm font-medium transition-all"
                     >
                       <FaGithub size={16} />
                       GitHub
@@ -118,7 +118,7 @@ export function CanvasMenu({ isOpen, onClose }: CanvasMenuProps) {
                       href="/resume/suhail_resume.pdf"
                       target="_blank"
                       download
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FF905F] text-[#0c0c0e] font-bold text-sm hover:opacity-90 transition-all"
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#e58e39] text-[#09090b] font-bold text-sm hover:opacity-90 transition-all"
                     >
                       <FaFileDownload size={14} />
                       Download Resume
@@ -128,13 +128,13 @@ export function CanvasMenu({ isOpen, onClose }: CanvasMenuProps) {
 
                 <div className="p-4 rounded-xl bg-white/5 border border-white/10">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="h-2 w-2 rounded-full bg-[#B7FF93] animate-pulse" />
-                    <span className="text-xs font-mono-tag text-[#B7FF93] font-bold uppercase">
+                    <span className="h-2 w-2 rounded-full bg-[#81c784] animate-pulse" />
+                    <span className="text-xs font-mono-tag text-[#81c784] font-bold uppercase">
                       Current Status
                     </span>
                   </div>
                   <p className="text-sm font-medium text-neutral-300">
-                    Open to Associate Product Manager, Product Manager, Product Owner & Product Analyst Roles.
+                    Open to Associate Product Manager, Product Manager, & Product Owner Roles.
                   </p>
                 </div>
               </div>
