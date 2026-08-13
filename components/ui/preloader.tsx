@@ -9,7 +9,7 @@ export function Preloader() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false)
-    }, 1400)
+    }, 1200)
     return () => clearTimeout(timer)
   }, [])
 
@@ -18,17 +18,17 @@ export function Preloader() {
       {isLoading && (
         <motion.div
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, y: -40, transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] } }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0c0c0e] text-white"
+          exit={{ opacity: 0, y: -30, transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] } }}
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#09090b] text-white"
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
             className="flex items-center gap-3"
           >
-            <span className="h-3 w-3 rounded-full bg-[#FF905F] animate-pulse" />
-            <h1 className="font-mono-tag text-2xl md:text-4xl font-bold tracking-widest uppercase">
+            <span className="h-3 w-3 rounded-full bg-[#e58e39] animate-pulse" />
+            <h1 className="font-mono-tag text-xl md:text-3xl font-bold tracking-widest uppercase">
               // M. MAHABOOB SUHAIL
             </h1>
           </motion.div>
@@ -36,18 +36,18 @@ export function Preloader() {
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="font-mono-tag text-xs tracking-widest text-neutral-400 mt-4 uppercase"
+            transition={{ delay: 0.2 }}
+            className="font-mono-tag text-xs tracking-widest text-neutral-400 mt-3 uppercase"
           >
-            Product Support Analyst & Product Strategy Portfolio
+            Product Support Analyst & Strategy Portfolio
           </motion.p>
 
-          <div className="w-48 h-[2px] bg-neutral-800 mt-8 relative overflow-hidden rounded-full">
+          <div className="w-44 h-[2px] bg-neutral-800 mt-6 relative overflow-hidden rounded-full">
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: "0%" }}
-              transition={{ duration: 1.2, ease: "easeInOut" }}
-              className="h-full bg-[#FF905F] w-full"
+              transition={{ duration: 1.0, ease: "easeInOut" }}
+              className="h-full bg-[#e58e39] w-full"
             />
           </div>
         </motion.div>

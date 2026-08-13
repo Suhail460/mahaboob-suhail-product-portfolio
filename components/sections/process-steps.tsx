@@ -11,7 +11,7 @@ const steps = [
     subtitle: "Mining customer escalations & support signals",
     description: "Analyzing high-frequency support tickets, churn logs, and escalation trends to isolate core product friction and unarticulated user needs.",
     deliverables: ["Support Ticket Data Mining", "User Friction Audits", "Customer Escalation Mapping"],
-    color: "#FF905F"
+    color: "#e58e39"
   },
   {
     number: "02",
@@ -19,7 +19,7 @@ const steps = [
     subtitle: "Formulating product strategy & PRDs",
     description: "Transforming raw customer signals into structured PRDs, user stories, low-fidelity wireframes, and testable product discovery hypotheses.",
     deliverables: ["PRD Specification Docs", "Hypothesis Matrix", "Interactive Wireframes"],
-    color: "#AB9BFF"
+    color: "#f4a261"
   },
   {
     number: "03",
@@ -27,7 +27,7 @@ const steps = [
     subtitle: "Cross-functional Agile alignment",
     description: "Partnering closely with software engineers, UI/UX designers, and QA to execute sprint backlogs and deliver polished features on schedule.",
     deliverables: ["Sprint Backlog Grooming", "Design System Audits", "Cross-Functional Alignment"],
-    color: "#B7FF93"
+    color: "#81c784"
   },
   {
     number: "04",
@@ -35,7 +35,7 @@ const steps = [
     subtitle: "Tracking outcome metrics & optimization",
     description: "Monitoring key product telemetry post-release—tracking resolution speeds, retention impact, adoption rates, and operational efficiency gains.",
     deliverables: ["Telemetry Dashboard", "Post-Launch Retrospectives", "Operational Cost Savings"],
-    color: "#FFD37A"
+    color: "#b39ddb"
   }
 ]
 
@@ -47,14 +47,14 @@ export function ProcessStepsSection() {
   }
 
   return (
-    <section id="framework" className="py-24 md:py-32 relative border-t border-white/10 bg-[#0e0e11]">
+    <section id="framework" className="py-24 md:py-32 relative border-t border-white/10 bg-[#09090b]">
       <div className="max-w-7xl mx-auto px-4 md:px-12">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <span className="h-3 w-3 rounded-full bg-[#B7FF93]" />
-              <p className="font-mono-tag text-xs md:text-sm font-bold uppercase tracking-widest text-[#B7FF93]">
+              <span className="h-3 w-3 rounded-full bg-[#81c784]" />
+              <p className="font-mono-tag text-xs md:text-sm font-bold uppercase tracking-widest text-[#81c784]">
                 METHODOLOGY & FRAMEWORK
               </p>
             </div>
@@ -77,9 +77,9 @@ export function ProcessStepsSection() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
+                transition={{ delay: idx * 0.08 }}
                 className={`rounded-2xl border transition-all overflow-hidden ${
-                  isOpen ? "bg-[#18181f] border-white/20 shadow-2xl" : "bg-[#141418] border-white/5 hover:border-white/15"
+                  isOpen ? "bg-[#121215] border-white/20 shadow-2xl" : "bg-[#121215]/60 border-white/5 hover:border-white/15"
                 }`}
               >
                 {/* Accordion Trigger */}
@@ -95,7 +95,7 @@ export function ProcessStepsSection() {
                       Step {step.number}
                     </span>
                     <div>
-                      <h3 className="text-xl md:text-3xl font-extrabold uppercase text-white group-hover:text-[#FF905F] transition-colors">
+                      <h3 className="text-xl md:text-3xl font-extrabold uppercase text-white group-hover:text-[#e58e39] transition-colors">
                         {step.title}
                       </h3>
                       <p className="text-xs md:text-sm text-neutral-400 mt-1 font-mono-tag">
@@ -106,7 +106,7 @@ export function ProcessStepsSection() {
 
                   <div
                     className={`p-3 rounded-full bg-white/5 border border-white/10 text-white transition-transform duration-300 ${
-                      isOpen ? "rotate-180 bg-[#FF905F] text-[#0c0c0e]" : ""
+                      isOpen ? "rotate-180 bg-[#e58e39] text-[#09090b]" : ""
                     }`}
                   >
                     <FaChevronDown size={14} />
@@ -125,13 +125,13 @@ export function ProcessStepsSection() {
                     >
                       <div className="grid md:grid-cols-12 gap-8 items-center pt-4">
                         <div className="md:col-span-8 space-y-4">
-                          <p className="text-base md:text-lg text-neutral-300 leading-relaxed">
+                          <p className="text-base md:text-lg text-neutral-300 leading-relaxed font-medium">
                             {step.description}
                           </p>
                           
                           <div className="pt-4">
                             <p className="font-mono-tag text-xs text-neutral-500 uppercase mb-3">
-                              Key Artifacts & Deliverables:
+                              // KEY ARTIFACTS & DELIVERABLES:
                             </p>
                             <div className="flex flex-wrap gap-2">
                               {step.deliverables.map((item) => (

@@ -1,57 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Ariyana Theme Design System */
-  --bg-primary: #0c0c0e;
-  --bg-secondary: #141418;
-  --bg-surface: #18181f;
-  --bg-card: #1c1c24;
-  --bg-glass: rgba(20, 20, 24, 0.85);
+  /* Refined Editorial Product Studio Design System */
+  --bg-primary: #09090b;
+  --bg-secondary: #121215;
+  --bg-surface: #18181c;
+  --bg-card: rgba(24, 24, 28, 0.7);
+  --bg-glass: rgba(18, 18, 21, 0.85);
 
-  --text-primary: #ffffff;
-  --text-secondary: #a0a0ab;
-  --text-muted: #646470;
-  --text-inverse: #0c0c0e;
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --text-accent: #e58e39;
 
-  --border-color: rgba(255, 255, 255, 0.1);
-  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-hover: rgba(255, 255, 255, 0.2);
 
-  /* Ariyana Pastel Color Palette */
-  --color-peach: #FF905F;
-  --color-lilac: #AB9BFF;
-  --color-mint: #B7FF93;
-  --color-coral: #FF767A;
-  --color-gold: #FFD37A;
-  --color-cyan: #64E5FF;
-  --color-purple: #8673EE;
-
-  --color-primary: var(--color-peach);
-  --color-accent: var(--color-lilac);
-
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --radius-full: 9999px;
+  /* Signature Warm Terracotta / Copper Accents */
+  --accent-warm: #e58e39;
+  --accent-amber: #f4a261;
+  --accent-sage: #81c784;
+  --accent-lilac: #b39ddb;
+  --accent-cyan: #4dd0e1;
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'Roboto Mono', monospace;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 html.lenis, html.lenis body {
@@ -70,6 +51,15 @@ html.lenis, html.lenis body {
   overflow: hidden;
 }
 
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
@@ -81,116 +71,92 @@ body {
 /* Monospace Code Typography */
 .font-mono-tag {
   font-family: var(--font-mono);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
-/* Ariyana Background Pattern Grid */
-.ariyana-grid-bg {
+/* Subtly Textured Background Grid */
+.studio-grid-bg {
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
-/* Giant Kinetic Heading */
+/* Editorial Heading Typographic Scale */
 .heading-hero {
-  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-size: clamp(2.5rem, 6.5vw, 5.2rem);
   font-weight: 800;
-  line-height: 0.95;
+  line-height: 1.05;
   letter-spacing: -0.03em;
-  text-transform: uppercase;
 }
 
 .heading-section {
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(1.85rem, 3.8vw, 3.2rem);
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  text-transform: uppercase;
 }
 
-/* Ariyana Floating Text Badge */
-.floating-badge {
+/* Status Pill Badge */
+.status-pill {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 16px;
+  padding: 6px 14px;
   border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   font-family: var(--font-mono);
-  color: #0c0c0e;
+  background: rgba(129, 199, 132, 0.12);
+  color: #81c784;
+  border: 1px solid rgba(129, 199, 132, 0.25);
 }
 
-/* Dual-Layer Rollover Text Button */
-.button-ariyana {
+/* Refined Primary & Secondary Action Buttons */
+.btn-studio {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 32px;
+  gap: 10px;
+  padding: 14px 28px;
   border-radius: 9999px;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  font-family: var(--font-mono);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   border: 1px solid var(--border-color);
   background: var(--bg-surface);
   color: var(--text-primary);
 }
 
-.button-ariyana .text-roll {
-  display: flex;
-  flex-direction: column;
-  height: 20px;
-  overflow: hidden;
+.btn-studio:hover {
+  border-color: var(--border-hover);
+  background: #202026;
+  transform: translateY(-2px);
 }
 
-.button-ariyana .text-roll span {
-  display: block;
-  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
-  height: 20px;
-  line-height: 20px;
-}
-
-.button-ariyana:hover .text-roll span {
-  transform: translateY(-20px);
-}
-
-.button-ariyana-primary {
+.btn-studio-primary {
   background: var(--text-primary);
   color: var(--bg-primary);
   border: none;
 }
 
-.button-ariyana-primary:hover {
-  background: var(--color-peach);
-  color: #0c0c0e;
-  box-shadow: 0 0 25px rgba(255, 144, 95, 0.4);
-}
-
-/* Ariyana Year Track Card */
-.year-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  padding: 32px;
-  transition: transform 0.3s ease, border-color 0.3s ease;
-}
-
-.year-card:hover {
-  border-color: rgba(255, 255, 255, 0.25);
-  transform: translateY(-4px);
+.btn-studio-primary:hover {
+  background: var(--accent-warm);
+  color: #09090b;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(229, 142, 57, 0.25);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -208,6 +174,6 @@ body {
 
 /* Selection */
 ::selection {
-  background: var(--color-peach);
-  color: #0c0c0e;
+  background: var(--accent-warm);
+  color: #09090b;
 }
