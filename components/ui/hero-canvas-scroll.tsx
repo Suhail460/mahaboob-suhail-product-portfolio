@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-mot
 import { FaArrowDown } from "react-icons/fa"
 
 const FRAME_COUNT = 100
-const INITIAL_PRELOAD_COUNT = 15
+const INITIAL_PRELOAD_COUNT = 20
 
 function getFrameUrl(index: number) {
   const paddedIndex = String(index + 1).padStart(4, "0")
@@ -28,13 +28,13 @@ export function HeroCanvasScroll() {
   })
 
   // Kinetic Split Text Transforms on Scroll
-  // "MAHABOOB" slides left, "SUHAIL" slides right, both fade out smoothly as frames play
-  const mahaboobX = useTransform(scrollYProgress, [0, 0.65], ["0%", "-75%"])
-  const suhailX = useTransform(scrollYProgress, [0, 0.65], ["0%", "75%"])
-  const nameOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0])
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0])
+  // "MAHABOOB" slides left, "SUHAIL" slides right, both fade out smoothly
+  const mahaboobX = useTransform(scrollYProgress, [0, 0.5], ["0%", "-75%"])
+  const suhailX = useTransform(scrollYProgress, [0, 0.5], ["0%", "75%"])
+  const nameOpacity = useTransform(scrollYProgress, [0, 0.45], [1, 0])
+  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
 
-  // Sharp, crystal clear canvas drawing function (True Object-Cover math: 0% black bars)
+  // Sharp, crystal clear canvas drawing function (Uses window viewport dimensions + setTransform reset)
   const drawFrame = useCallback((frameIndex: number) => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -45,17 +45,16 @@ export function HeroCanvasScroll() {
     if (!img || !img.complete || img.naturalWidth === 0) return
 
     const dpr = window.devicePixelRatio || 1
-    const displayWidth = canvas.clientWidth
-    const displayHeight = canvas.clientHeight
+    const displayWidth = window.innerWidth
+    const displayHeight = window.innerHeight
 
     if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
       canvas.width = displayWidth * dpr
       canvas.height = displayHeight * dpr
     }
 
-    ctx.save()
-    ctx.scale(dpr, dpr)
-
+    // Reset matrix transform completely before applying scale
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     ctx.imageSmoothingEnabled = true
     ctx.imageSmoothingQuality = "high"
 
@@ -78,15 +77,14 @@ export function HeroCanvasScroll() {
     const offsetY = (displayHeight - renderH) / 2
 
     ctx.drawImage(img, offsetX, offsetY, renderW, renderH)
-    ctx.restore()
   }, [])
 
-  // Two-tier image preloading (15 initial frames for instant load, remaining 85 background)
+  // Two-tier image preloading (20 initial frames for instant load, remaining 80 background)
   useEffect(() => {
     let loadedCount = 0
     const loadedImages: HTMLImageElement[] = new Array(FRAME_COUNT)
 
-    // Tier 1: Preload initial 15 frames
+    // Tier 1: Preload initial 20 frames
     for (let i = 0; i < INITIAL_PRELOAD_COUNT; i++) {
       const img = new Image()
       img.src = getFrameUrl(i)
@@ -100,7 +98,7 @@ export function HeroCanvasScroll() {
       loadedImages[i] = img
     }
 
-    // Tier 2: Stream remaining 85 frames
+    // Tier 2: Stream remaining 80 frames
     setTimeout(() => {
       for (let i = INITIAL_PRELOAD_COUNT; i < FRAME_COUNT; i++) {
         const img = new Image()
@@ -116,9 +114,11 @@ export function HeroCanvasScroll() {
     imagesRef.current = loadedImages
   }, [])
 
-  // Handle frame drawing on scroll progress change
+  // Handle frame drawing on scroll progress change (Maps scroll progress smoothly across 100 frames)
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    const frameIndex = Math.min(FRAME_COUNT - 1, Math.max(0, Math.floor(latest * FRAME_COUNT)))
+    // Map scroll 0 -> 0.85 to frames 0 -> 99 (frame 100 stays pinned for final 15% scroll)
+    const progressFactor = Math.min(1, latest / 0.85)
+    const frameIndex = Math.min(FRAME_COUNT - 1, Math.max(0, Math.floor(progressFactor * FRAME_COUNT)))
     if (frameIndex !== currentFrameIndex) {
       setCurrentFrameIndex(frameIndex)
       if (animFrameIdRef.current !== null) {
@@ -152,7 +152,7 @@ export function HeroCanvasScroll() {
   }, [currentFrameIndex, drawFrame])
 
   return (
-    <div ref={containerRef} className="relative h-[180vh] bg-[#09090b]">
+    <div ref={containerRef} className="relative h-[250vh] bg-[#09090b]">
       {/* Sticky Fullscreen Canvas & Motion Container */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between">
         {/* Background 24fps Canvas Frame Player (True Fullscreen Cover, 0% Black Bars) */}
