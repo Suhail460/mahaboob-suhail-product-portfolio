@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 
 export default function DiscoveryDojoCaseStudy() {
   return (
-    <main className="min-h-screen bg-[#0c0c0e] text-white overflow-x-hidden arayana-grid-bg">
+    <main className="min-h-screen bg-[#0c0c0e] text-white overflow-x-clip arayana-grid-bg">
       <ReadingProgress />
 
       <div className="pt-20">
