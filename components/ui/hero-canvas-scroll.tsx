@@ -192,52 +192,55 @@ export function HeroCanvasScroll() {
             </div>
           </div>
 
-          {/* Center Editorial Typography Layer - Direct over image, NO box, NO shadow, NO background */}
+          {/* Center Editorial Typography Layer */}
           <div className="my-auto w-full select-none">
-            {/* Name Container: Full-width composition, MAHABOOB moves LEFT, SUHAIL moves RIGHT */}
+            {/* Name Container: Responsive font scaling & gap prevents 'L' clipping, High contrast Crisp White & Obsidian Black */}
             <div
-              className="w-full flex items-center justify-between px-2 sm:px-6 md:px-12 py-2 overflow-hidden"
+              className="w-full flex items-center justify-center gap-3 sm:gap-6 lg:gap-8 text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-tight leading-none py-2"
               style={{
                 visibility: nameExited ? "hidden" : "visible",
                 pointerEvents: nameExited ? "none" : "auto",
                 transition: nameExited ? "visibility 0s linear 0.4s" : "none",
               }}
             >
-              {/* MAHABOOB: Clean white typography, moves LEFT (-150px) & fades out */}
+              {/* MAHABOOB: Polar White, moves LEFT (-150px) & fades out */}
               <motion.span
                 initial={{ x: 0, opacity: 1 }}
                 animate={nameExited ? { x: -150, opacity: 0 } : { x: 0, opacity: 1 }}
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none text-white"
+                className="inline-block text-white shrink-0"
               >
                 MAHABOOB
               </motion.span>
 
-              {/* SUHAIL: Clean copper typography, moves RIGHT (+150px) & fades out */}
+              {/* SUHAIL: Ultra-High Contrast Obsidian Dark, moves RIGHT (+150px) & fades out */}
               <motion.span
                 initial={{ x: 0, opacity: 1 }}
                 animate={nameExited ? { x: 150, opacity: 0 } : { x: 0, opacity: 1 }}
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none text-[#e58e39]"
+                className="inline-block text-[#09090b] shrink-0"
               >
                 SUHAIL
               </motion.span>
             </div>
 
-            {/* Supporting Role Text: Clean text directly over image (NO background box), fades away y: -20px */}
+            {/* Supporting Role Tile: UI/UX Pro Max Glass Pill Badge */}
             <motion.div
               initial={{ y: 0, opacity: 1 }}
               animate={nameExited ? { y: -20, opacity: 0 } : { y: 0, opacity: 1 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-6 text-center"
+              className="mt-6 text-center pointer-events-auto"
               style={{
                 visibility: nameExited ? "hidden" : "visible",
                 pointerEvents: nameExited ? "none" : "auto",
               }}
             >
-              <p className="font-mono-tag text-xs sm:text-sm font-bold uppercase tracking-[0.3em] text-white/90">
-                PRODUCT SUPPORT ANALYST &amp; PRODUCT STRATEGIST
-              </p>
+              <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-[#09090b]/85 backdrop-blur-xl border border-white/20 text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+                <span className="h-2 w-2 rounded-full bg-[#e58e39] animate-pulse shrink-0" />
+                <span className="font-mono-tag text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-white">
+                  PRODUCT SUPPORT ANALYST <span className="text-[#e58e39] font-normal">//</span> PRODUCT STRATEGIST
+                </span>
+              </div>
             </motion.div>
           </div>
 
