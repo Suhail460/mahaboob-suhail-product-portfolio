@@ -24,7 +24,7 @@ export function HeroCanvasScroll() {
   const [imagesLoaded, setImagesLoaded] = useState(false)
   const [loadProgress, setLoadProgress] = useState(0)
 
-  // Monotonic state: Once progress reaches 0.66 (2/3 point), nameExited locks to true
+  // Monotonic state: Once progress reaches 0.60 (60% point), nameExited triggers and locks
   const [nameExited, setNameExited] = useState(false)
 
   // Layer 1 Track: Track scroll through outer sequence track (300vh height = 200vh scroll travel)
@@ -115,12 +115,12 @@ export function HeroCanvasScroll() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Scroll listener: Monotonic exit trigger at 66% progress & 60fps frame interpolation
+  // Scroll listener: Monotonic exit trigger at 60% progress (EXIT_START = 0.60, EXIT_END = 0.66)
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (shouldReduceMotion) return
 
-    // Monotonic trigger: Once progress reaches 0.66 (~2/3 point of hero sequence), nameExited locks to true
-    if (latest >= 0.66 && !nameExited) {
+    // Monotonic trigger: Once progress reaches 0.60 (~60% point of hero sequence), nameExited locks to true
+    if (latest >= 0.60 && !nameExited) {
       setNameExited(true)
     } else if (latest <= 0.005 && nameExited) {
       // Reset ONLY when user scrolls all the way back to absolute top of page (0.5%)
@@ -184,7 +184,7 @@ export function HeroCanvasScroll() {
 
         {/* Hero Content Overlay Container */}
         <div className="relative z-20 max-w-7xl mx-auto px-4 md:px-12 pt-28 pb-10 flex flex-col justify-between h-full w-full pointer-events-none">
-          {/* Top Left Availability Status Badge - KEPT 100% INTACT & VISIBLE THROUGHOUT ENTIRE HERO SEQUENCE */}
+          {/* Top Left Availability Status Badge - KEPT 100% INTACT & VISIBLE CONTINUOUSLY */}
           <div className="flex items-center justify-between pointer-events-auto">
             <div className="px-4 py-2 rounded-full bg-[#09090b]/90 backdrop-blur-xl border border-white/20 text-white font-mono-tag text-xs font-bold tracking-wider uppercase flex items-center gap-3 shadow-2xl">
               <span className="h-2.5 w-2.5 rounded-full bg-[#81c784] animate-pulse shrink-0" />
@@ -192,51 +192,60 @@ export function HeroCanvasScroll() {
             </div>
           </div>
 
-          {/* Center Hero Name & Supporting Role Text */}
-          <div className="my-auto text-center w-full select-none">
-            {/* Name Container: MAHABOOB splits LEFT (-120px), SUHAIL splits RIGHT (+120px) at 66% progress */}
+          {/* Center Editorial Typography Layer - Direct over image, NO box, NO shadow, NO background */}
+          <div className="my-auto w-full select-none">
+            {/* Name Container: Full-width composition, MAHABOOB moves LEFT, SUHAIL moves RIGHT */}
             <div
-              className="flex items-center justify-center gap-4 sm:gap-6 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none py-2 overflow-hidden"
+              className="w-full flex items-center justify-between px-2 sm:px-6 md:px-12 py-2 overflow-hidden"
               style={{
                 visibility: nameExited ? "hidden" : "visible",
                 pointerEvents: nameExited ? "none" : "auto",
-                transition: nameExited ? "visibility 0s linear 0.5s" : "none",
+                transition: nameExited ? "visibility 0s linear 0.4s" : "none",
               }}
             >
-              {/* MAHABOOB: Animates LEFT (-120px) + fade to 0 */}
+              {/* MAHABOOB: Clean white typography, moves LEFT (-150px) & fades out */}
               <motion.span
                 initial={{ x: 0, opacity: 1 }}
-                animate={nameExited ? { x: -120, opacity: 0 } : { x: 0, opacity: 1 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.95)]"
+                animate={nameExited ? { x: -150, opacity: 0 } : { x: 0, opacity: 1 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                className="inline-block text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none text-white"
               >
                 MAHABOOB
               </motion.span>
 
-              {/* SUHAIL: Animates RIGHT (+120px) + fade to 0 */}
+              {/* SUHAIL: Clean copper typography, moves RIGHT (+150px) & fades out */}
               <motion.span
                 initial={{ x: 0, opacity: 1 }}
-                animate={nameExited ? { x: 120, opacity: 0 } : { x: 0, opacity: 1 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block text-[#e58e39] drop-shadow-[0_10px_30px_rgba(0,0,0,0.95)]"
+                animate={nameExited ? { x: 150, opacity: 0 } : { x: 0, opacity: 1 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                className="inline-block text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none text-[#e58e39]"
               >
                 SUHAIL
               </motion.span>
             </div>
 
-            {/* Supporting Role Text: KEPT 100% INTACT & VISIBLE THROUGHOUT ENTIRE HERO SEQUENCE */}
-            <div className="mt-4 pointer-events-auto">
-              <p className="font-mono-tag text-xs sm:text-sm font-bold uppercase tracking-[0.3em] text-white drop-shadow-lg bg-[#09090b]/80 backdrop-blur-md px-5 py-2 rounded-full inline-block border border-white/15">
+            {/* Supporting Role Text: Clean text directly over image (NO background box), fades away y: -20px */}
+            <motion.div
+              initial={{ y: 0, opacity: 1 }}
+              animate={nameExited ? { y: -20, opacity: 0 } : { y: 0, opacity: 1 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-6 text-center"
+              style={{
+                visibility: nameExited ? "hidden" : "visible",
+                pointerEvents: nameExited ? "none" : "auto",
+              }}
+            >
+              <p className="font-mono-tag text-xs sm:text-sm font-bold uppercase tracking-[0.3em] text-white/90">
                 PRODUCT SUPPORT ANALYST &amp; PRODUCT STRATEGIST
               </p>
-            </div>
+            </motion.div>
           </div>
 
           {/* Bottom Minimal Scroll Indicator */}
           <motion.div
             initial={{ opacity: 1 }}
             animate={nameExited ? { opacity: 0 } : { opacity: 1 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.3 }}
             className="flex flex-col items-center justify-center text-center gap-1 font-mono-tag text-xs uppercase tracking-widest text-neutral-300 pointer-events-auto"
           >
             <span>SCROLL TO EXPLORE</span>
