@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState, useCallback } from "react"
-import { motion, useScroll, useTransform, useMotionValueEvent, useReducedMotion } from "framer-motion"
+import { motion, useScroll, useMotionValueEvent, useReducedMotion } from "framer-motion"
 import { FaArrowDown } from "react-icons/fa"
 
 const FRAME_COUNT = 100
@@ -24,17 +24,14 @@ export function HeroCanvasScroll() {
   const [imagesLoaded, setImagesLoaded] = useState(false)
   const [loadProgress, setLoadProgress] = useState(0)
 
+  // One-way persistent exit state for hero text elements
+  const [textExited, setTextExited] = useState(false)
+
   // Layer 1 Track: Track scroll through outer sequence track (300vh height = 200vh scroll travel)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   })
-
-  // Original Kinetic Split Name Transforms as user scrolls past Hero
-  const mahaboobX = useTransform(scrollYProgress, [0, 0.7], ["0%", "-75%"])
-  const suhailX = useTransform(scrollYProgress, [0, 0.7], ["0%", "75%"])
-  const nameOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0])
 
   // Sharp, crystal clear retina canvas drawing function
   const drawFrame = useCallback((frameIndex: number) => {
@@ -118,9 +115,17 @@ export function HeroCanvasScroll() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Smooth lerp frame interpolation loop for 60fps buttery scroll playback
+  // Scroll listener for state-based one-way text exit & 60fps frame interpolation
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (shouldReduceMotion) return
+
+    // Explicit one-way exit trigger: Once progress reaches 0.08, lock textExited to true
+    if (latest >= 0.08 && !textExited) {
+      setTextExited(true)
+    } else if (latest <= 0.005 && textExited) {
+      // Reset ONLY when user scrolls all the way back to the absolute top of page (0.5%)
+      setTextExited(false)
+    }
 
     const clampedProgress = Math.min(1, Math.max(0, latest))
     const targetFrame = Math.min(FRAME_COUNT - 1, Math.max(0, Math.floor(clampedProgress * FRAME_COUNT)))
@@ -180,40 +185,60 @@ export function HeroCanvasScroll() {
         {/* Hero Content Overlay Container */}
         <div className="relative z-20 max-w-7xl mx-auto px-4 md:px-12 pt-28 pb-10 flex flex-col justify-between h-full w-full pointer-events-none">
           {/* Top Left Availability Status Badge */}
-          <div className="flex items-center justify-between pointer-events-auto">
+          <motion.div
+            initial={{ opacity: 1 }}
+            animate={textExited ? { opacity: 0 } : { opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="flex items-center justify-between pointer-events-auto"
+          >
             <div className="px-4 py-2 rounded-full bg-[#09090b]/90 backdrop-blur-xl border border-white/20 text-white font-mono-tag text-xs font-bold tracking-wider uppercase flex items-center gap-3 shadow-2xl">
               <span className="h-2.5 w-2.5 rounded-full bg-[#81c784] animate-pulse shrink-0" />
               <span className="text-white">Available for product management roles</span>
             </div>
-          </div>
-
-          {/* Center Kinetic Splitting Name: "MAHABOOB" moves left, "SUHAIL" moves right & both fade out on scroll */}
-          <motion.div
-            style={{ opacity: nameOpacity }}
-            className="my-auto text-center w-full select-none"
-          >
-            <div className="flex items-center justify-center gap-4 sm:gap-6 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none">
-              <motion.span
-                style={{ x: mahaboobX }}
-                className="inline-block text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.95)]"
-              >
-                MAHABOOB
-              </motion.span>
-              <motion.span
-                style={{ x: suhailX }}
-                className="inline-block text-[#e58e39] drop-shadow-[0_10px_30px_rgba(0,0,0,0.95)]"
-              >
-                SUHAIL
-              </motion.span>
-            </div>
-            <p className="font-mono-tag text-xs sm:text-sm font-bold uppercase tracking-[0.3em] text-white mt-4 drop-shadow-lg bg-[#09090b]/80 backdrop-blur-md px-5 py-2 rounded-full inline-block border border-white/15">
-              PRODUCT SUPPORT ANALYST &amp; PRODUCT STRATEGIST
-            </p>
           </motion.div>
+
+          {/* Center Hero Text Container with Explicit State Exit */}
+          <div
+            className="my-auto text-center w-full select-none"
+            style={{
+              visibility: textExited ? "hidden" : "visible",
+              pointerEvents: textExited ? "none" : "auto",
+              transition: textExited ? "visibility 0s linear 0.5s" : "none",
+            }}
+          >
+            {/* Main Name: Moves LEFT (-120px) and fades to 0 */}
+            <motion.div
+              initial={{ x: 0, opacity: 1 }}
+              animate={textExited ? { x: -120, opacity: 0 } : { x: 0, opacity: 1 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="flex items-center justify-center gap-4 sm:gap-6 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none py-2"
+            >
+              <span className="inline-block text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.95)]">
+                MAHABOOB
+              </span>
+              <span className="inline-block text-[#e58e39] drop-shadow-[0_10px_30px_rgba(0,0,0,0.95)]">
+                SUHAIL
+              </span>
+            </motion.div>
+
+            {/* Subtitle Role Pill: Moves RIGHT (+100px) and fades to 0 */}
+            <motion.div
+              initial={{ x: 0, opacity: 1 }}
+              animate={textExited ? { x: 100, opacity: 0 } : { x: 0, opacity: 1 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="inline-block"
+            >
+              <p className="font-mono-tag text-xs sm:text-sm font-bold uppercase tracking-[0.3em] text-white mt-4 drop-shadow-lg bg-[#09090b]/80 backdrop-blur-md px-5 py-2 rounded-full inline-block border border-white/15">
+                PRODUCT SUPPORT ANALYST &amp; PRODUCT STRATEGIST
+              </p>
+            </motion.div>
+          </div>
 
           {/* Bottom Minimal Scroll Indicator */}
           <motion.div
-            style={{ opacity: scrollIndicatorOpacity }}
+            initial={{ opacity: 1 }}
+            animate={textExited ? { opacity: 0 } : { opacity: 1 }}
+            transition={{ duration: 0.3 }}
             className="flex flex-col items-center justify-center text-center gap-1 font-mono-tag text-xs uppercase tracking-widest text-neutral-300 pointer-events-auto"
           >
             <span>SCROLL TO EXPLORE</span>
