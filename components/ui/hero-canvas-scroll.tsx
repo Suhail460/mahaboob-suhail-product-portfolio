@@ -29,11 +29,12 @@ export function HeroCanvasScroll() {
     offset: ["start start", "end end"],
   })
 
-  // Kinetic Split Name Transforms during initial 35% of scroll progress
-  const mahaboobX = useTransform(scrollYProgress, [0, 0.35], ["0%", "-75%"])
-  const suhailX = useTransform(scrollYProgress, [0, 0.35], ["0%", "75%"])
-  const nameOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0])
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0])
+  // Kinetic Split Name Transforms: splits to sides and completely fades away to 0 opacity by 0.18 scroll progress
+  const mahaboobX = useTransform(scrollYProgress, [0, 0.2], ["0%", "-100%"])
+  const suhailX = useTransform(scrollYProgress, [0, 0.2], ["0%", "100%"])
+  const nameOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0])
+  const statusBadgeOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0])
+  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0])
 
   // Sharp, crystal clear canvas drawing function (True Fullscreen Cover, 0% black bars)
   const drawFrame = useCallback((frameIndex: number) => {
@@ -175,12 +176,12 @@ export function HeroCanvasScroll() {
         {/* Hero Content Overlay Container */}
         <div className="relative z-20 max-w-7xl mx-auto px-4 md:px-12 pt-28 pb-10 flex flex-col justify-between h-full w-full pointer-events-none">
           {/* Top Left Availability Status Badge */}
-          <div className="flex items-center justify-between pointer-events-auto">
+          <motion.div style={{ opacity: statusBadgeOpacity }} className="flex items-center justify-between pointer-events-auto">
             <div className="px-4 py-2 rounded-full bg-[#09090b]/90 backdrop-blur-xl border border-white/20 text-white font-mono-tag text-xs font-bold tracking-wider uppercase flex items-center gap-3 shadow-2xl">
               <span className="h-2.5 w-2.5 rounded-full bg-[#81c784] animate-pulse shrink-0" />
               <span className="text-white">Available for product management roles</span>
             </div>
-          </div>
+          </motion.div>
 
           {/* Center Kinetic Splitting Name: "MAHABOOB" moves left, "SUHAIL" moves right & both fade out on scroll */}
           <motion.div
