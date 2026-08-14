@@ -30,13 +30,13 @@ export function HeroCanvasScroll() {
     offset: ["start start", "end end"],
   })
 
-  // Kinetic Split Name Transforms: split out [0vw -> 120vw] and fade away ONLY at the very end [0.10 -> 0.14]
-  const mahaboobX = useTransform(scrollYProgress, [0, 0.14], ["0vw", "-120vw"])
-  const suhailX = useTransform(scrollYProgress, [0, 0.14], ["0vw", "120vw"])
-  const nameOpacity = useTransform(scrollYProgress, [0, 0.1, 0.14], [1, 1, 0])
+  // Kinetic Split Name Transforms: split smoothly to outer edges [0% -> 100%] and fade out strictly at edge arrival [0.12 -> 0.15]
+  const mahaboobX = useTransform(scrollYProgress, [0, 0.15], ["0%", "-100%"])
+  const suhailX = useTransform(scrollYProgress, [0, 0.15], ["0%", "100%"])
+  const nameOpacity = useTransform(scrollYProgress, [0, 0.12, 0.15, 1], [1, 1, 0, 0])
 
-  const statusBadgeOpacity = useTransform(scrollYProgress, [0, 0.08, 0.14], [1, 1, 0])
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0])
+  const statusBadgeOpacity = useTransform(scrollYProgress, [0, 0.1, 0.15, 1], [1, 1, 0, 0])
+  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.05, 0.1, 1], [1, 1, 0, 0])
 
   // Sharp, crystal clear retina canvas drawing function
   const drawFrame = useCallback((frameIndex: number) => {
@@ -197,7 +197,7 @@ export function HeroCanvasScroll() {
             style={{ opacity: nameOpacity }}
             className="my-auto text-center w-full select-none overflow-hidden py-4"
           >
-            <div className="flex items-center justify-center gap-4 sm:gap-6 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none py-2">
+            <div className="flex items-center justify-center gap-4 sm:gap-6 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none py-2 overflow-hidden">
               <motion.span
                 style={{ x: mahaboobX }}
                 className="inline-block text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.95)] whitespace-nowrap"
