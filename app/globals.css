@@ -141,6 +141,10 @@ body {
   transform: translateY(-2px);
 }
 
+.btn-studio:active {
+  transform: translateY(0px) scale(0.98);
+}
+
 .btn-studio-primary {
   background: var(--text-primary);
   color: var(--bg-primary);
@@ -152,6 +156,10 @@ body {
   color: #09090b;
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(229, 142, 57, 0.25);
+}
+
+.btn-studio-primary:active {
+  transform: translateY(0px) scale(0.98);
 }
 
 /* Custom Scrollbar */
@@ -176,4 +184,16 @@ body {
 ::selection {
   background: var(--accent-warm);
   color: #09090b;
+}
+
+/* Accessibility: Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
