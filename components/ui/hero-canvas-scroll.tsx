@@ -29,12 +29,17 @@ export function HeroCanvasScroll() {
     offset: ["start start", "end end"],
   })
 
-  // Kinetic Split Name Transforms: splits to sides and completely fades away to 0 opacity by 0.18 scroll progress
-  const mahaboobX = useTransform(scrollYProgress, [0, 0.2], ["0%", "-100%"])
-  const suhailX = useTransform(scrollYProgress, [0, 0.2], ["0%", "100%"])
-  const nameOpacity = useTransform(scrollYProgress, [0, 0.18], [1, 0])
-  const statusBadgeOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0])
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0])
+  // Kinetic Split Name Transforms using full viewport width (vw) so text moves 100% off-screen
+  const mahaboobX = useTransform(scrollYProgress, [0, 0.12], ["0vw", "-100vw"])
+  const suhailX = useTransform(scrollYProgress, [0, 0.12], ["0vw", "100vw"])
+  const nameOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0])
+
+  // High-End Role Badge: Fades out rapidly [0 .. 0.08] with smooth downward float [0px .. 20px]
+  const roleOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0])
+  const roleY = useTransform(scrollYProgress, [0, 0.08], [0, 20])
+
+  const statusBadgeOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0])
+  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0])
 
   // Sharp, crystal clear canvas drawing function (True Fullscreen Cover, 0% black bars)
   const drawFrame = useCallback((frameIndex: number) => {
@@ -176,35 +181,48 @@ export function HeroCanvasScroll() {
         {/* Hero Content Overlay Container */}
         <div className="relative z-20 max-w-7xl mx-auto px-4 md:px-12 pt-28 pb-10 flex flex-col justify-between h-full w-full pointer-events-none">
           {/* Top Left Availability Status Badge */}
-          <motion.div style={{ opacity: statusBadgeOpacity }} className="flex items-center justify-between pointer-events-auto">
+          <motion.div
+            style={{ opacity: statusBadgeOpacity }}
+            className="flex items-center justify-between pointer-events-auto"
+          >
             <div className="px-4 py-2 rounded-full bg-[#09090b]/90 backdrop-blur-xl border border-white/20 text-white font-mono-tag text-xs font-bold tracking-wider uppercase flex items-center gap-3 shadow-2xl">
               <span className="h-2.5 w-2.5 rounded-full bg-[#81c784] animate-pulse shrink-0" />
               <span className="text-white">Available for product management roles</span>
             </div>
           </motion.div>
 
-          {/* Center Kinetic Splitting Name: "MAHABOOB" moves left, "SUHAIL" moves right & both fade out on scroll */}
+          {/* Center Kinetic Splitting Name & High-End Role Badge */}
           <motion.div
             style={{ opacity: nameOpacity }}
-            className="my-auto text-center w-full select-none"
+            className="my-auto text-center w-full select-none overflow-hidden py-4"
           >
-            <div className="flex items-center justify-center gap-4 sm:gap-6 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none">
+            <div className="flex items-center justify-center gap-4 sm:gap-6 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter leading-none py-2">
               <motion.span
                 style={{ x: mahaboobX }}
-                className="inline-block text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.95)]"
+                className="inline-block text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.95)] whitespace-nowrap"
               >
                 MAHABOOB
               </motion.span>
               <motion.span
                 style={{ x: suhailX }}
-                className="inline-block text-[#e58e39] drop-shadow-[0_10px_30px_rgba(0,0,0,0.95)]"
+                className="inline-block text-[#e58e39] drop-shadow-[0_10px_30px_rgba(0,0,0,0.95)] whitespace-nowrap"
               >
                 SUHAIL
               </motion.span>
             </div>
-            <p className="font-mono-tag text-xs sm:text-sm font-bold uppercase tracking-[0.3em] text-white mt-4 drop-shadow-lg bg-[#09090b]/80 backdrop-blur-md px-5 py-2 rounded-full inline-block border border-white/15">
-              PRODUCT SUPPORT ANALYST & PRODUCT STRATEGIST
-            </p>
+
+            {/* Premium UI/UX Pro Max Glass Pill Badge */}
+            <motion.div
+              style={{ opacity: roleOpacity, y: roleY }}
+              className="mt-6 inline-block pointer-events-auto"
+            >
+              <div className="px-6 py-2.5 rounded-full bg-[#09090b]/85 backdrop-blur-2xl border border-[#e58e39]/40 shadow-[0_10px_35px_rgba(0,0,0,0.85)] flex items-center gap-3">
+                <span className="h-2 w-2 rounded-full bg-[#e58e39] animate-pulse shrink-0" />
+                <span className="font-mono-tag text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-white">
+                  PRODUCT SUPPORT ANALYST <span className="text-[#e58e39] font-normal">&amp;</span> PRODUCT STRATEGIST
+                </span>
+              </div>
+            </motion.div>
           </motion.div>
 
           {/* Bottom Minimal Scroll Indicator */}
