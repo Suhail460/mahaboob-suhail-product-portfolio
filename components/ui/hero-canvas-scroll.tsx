@@ -194,7 +194,7 @@ export function HeroCanvasScroll() {
 
           {/* Center Editorial Typography Layer */}
           <div className="my-auto w-full select-none">
-            {/* Name Container: Responsive font scaling & gap prevents 'L' clipping, High contrast Crisp White & Obsidian Black */}
+            {/* Name Container: Responsive font scaling & gap prevents 'L' clipping, Luxury Polar White & Sunburst Gold */}
             <div
               className="w-full flex items-center justify-center gap-3 sm:gap-6 lg:gap-8 text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-tight leading-none py-2"
               style={{
@@ -213,12 +213,12 @@ export function HeroCanvasScroll() {
                 MAHABOOB
               </motion.span>
 
-              {/* SUHAIL: Ultra-High Contrast Obsidian Dark, moves RIGHT (+150px) & fades out */}
+              {/* SUHAIL: Premium Sunburst Platinum Gold, moves RIGHT (+150px) & fades out */}
               <motion.span
                 initial={{ x: 0, opacity: 1 }}
                 animate={nameExited ? { x: 150, opacity: 0 } : { x: 0, opacity: 1 }}
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block text-[#09090b] shrink-0"
+                className="inline-block text-[#fcd34d] shrink-0"
               >
                 SUHAIL
               </motion.span>
@@ -236,9 +236,9 @@ export function HeroCanvasScroll() {
               }}
             >
               <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-[#09090b]/85 backdrop-blur-xl border border-white/20 text-white shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
-                <span className="h-2 w-2 rounded-full bg-[#e58e39] animate-pulse shrink-0" />
+                <span className="h-2 w-2 rounded-full bg-[#fcd34d] animate-pulse shrink-0" />
                 <span className="font-mono-tag text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-white">
-                  PRODUCT SUPPORT ANALYST <span className="text-[#e58e39] font-normal">//</span> PRODUCT STRATEGIST
+                  PRODUCT SUPPORT ANALYST <span className="text-[#fcd34d] font-normal">//</span> PRODUCT STRATEGIST
                 </span>
               </div>
             </motion.div>
@@ -252,7 +252,7 @@ export function HeroCanvasScroll() {
             className="flex flex-col items-center justify-center text-center gap-1 font-mono-tag text-xs uppercase tracking-widest text-neutral-300 pointer-events-auto"
           >
             <span>SCROLL TO EXPLORE</span>
-            <FaArrowDown size={10} className="text-[#e58e39] animate-bounce mt-1" />
+            <FaArrowDown size={10} className="text-[#fcd34d] animate-bounce mt-1" />
           </motion.div>
         </div>
       </div>
