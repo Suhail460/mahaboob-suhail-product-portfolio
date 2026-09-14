@@ -154,18 +154,24 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
     const moveHandler = (e: MouseEvent) => moveCursor(e.clientX, e.clientY)
     window.addEventListener("mousemove", moveHandler)
 
+    let scrollRafId: number | null = null
     const scrollHandler = () => {
       if (!activeTarget || !cursorRef.current) return
-      const { x: offsetX, y: offsetY } = getOffset()
-      const mouseX = (gsap.getProperty(cursorRef.current, "x") as number) + offsetX
-      const mouseY = (gsap.getProperty(cursorRef.current, "y") as number) + offsetY
-      const elementUnderMouse = document.elementFromPoint(mouseX, mouseY)
-      const isStillOverTarget =
-        elementUnderMouse &&
-        (elementUnderMouse === activeTarget || elementUnderMouse.closest(targetSelector) === activeTarget)
-      if (!isStillOverTarget) {
-        currentLeaveHandler?.()
-      }
+      if (scrollRafId !== null) return
+      scrollRafId = requestAnimationFrame(() => {
+        scrollRafId = null
+        if (!activeTarget || !cursorRef.current) return
+        const { x: offsetX, y: offsetY } = getOffset()
+        const mouseX = (gsap.getProperty(cursorRef.current, "x") as number) + offsetX
+        const mouseY = (gsap.getProperty(cursorRef.current, "y") as number) + offsetY
+        const elementUnderMouse = document.elementFromPoint(mouseX, mouseY)
+        const isStillOverTarget =
+          elementUnderMouse &&
+          (elementUnderMouse === activeTarget || elementUnderMouse.closest(targetSelector) === activeTarget)
+        if (!isStillOverTarget) {
+          currentLeaveHandler?.()
+        }
+      })
     }
     window.addEventListener("scroll", scrollHandler, { passive: true })
 

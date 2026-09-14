@@ -5,24 +5,25 @@ import { motion, useScroll, useMotionValueEvent, useReducedMotion } from "framer
 import { FaArrowDown } from "react-icons/fa"
 
 const FRAME_COUNT = 100
-const INITIAL_PRELOAD_COUNT = 25
+const PRIORITY_FRAME_BATCH = 15
 
 function getFrameUrl(index: number) {
   const paddedIndex = String(index + 1).padStart(4, "0")
-  return `/frames/video_frames_24fps/frame_${paddedIndex}.png`
+  return `/frames/webp/frame_${paddedIndex}.webp`
 }
 
 export function HeroCanvasScroll() {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const imagesRef = useRef<HTMLImageElement[]>([])
+  const imagesRef = useRef<(HTMLImageElement | null)[]>([])
   const animFrameIdRef = useRef<number | null>(null)
   const targetFrameRef = useRef<number>(0)
   const currentRenderedFrameRef = useRef<number>(0)
+  const lastDrawnFrameRef = useRef<number>(-1)
+  const dimensionsRef = useRef<{ w: number; h: number; dpr: number }>({ w: 0, h: 0, dpr: 1 })
   const shouldReduceMotion = useReducedMotion()
 
   const [imagesLoaded, setImagesLoaded] = useState(false)
-  const [loadProgress, setLoadProgress] = useState(0)
 
   // Monotonic state: Once progress reaches 0.60 (60% point), nameExited triggers and locks
   const [nameExited, setNameExited] = useState(false)
@@ -33,6 +34,26 @@ export function HeroCanvasScroll() {
     offset: ["start start", "end end"],
   })
 
+  // Find the closest loaded frame to avoid any blank flashes during rapid scroll
+  const getNearestLoadedFrame = useCallback((target: number): HTMLImageElement | null => {
+    const images = imagesRef.current
+    if (images[target]?.complete && images[target]?.naturalWidth) {
+      return images[target]!
+    }
+    // Search outwards from target frame for nearest loaded frame
+    for (let offset = 1; offset < FRAME_COUNT; offset++) {
+      const prev = target - offset
+      if (prev >= 0 && images[prev]?.complete && images[prev]?.naturalWidth) {
+        return images[prev]!
+      }
+      const next = target + offset
+      if (next < FRAME_COUNT && images[next]?.complete && images[next]?.naturalWidth) {
+        return images[next]!
+      }
+    }
+    return images[0]?.complete ? images[0] : null
+  }, [])
+
   // Sharp, crystal clear retina canvas drawing function
   const drawFrame = useCallback((frameIndex: number) => {
     const canvas = canvasRef.current
@@ -40,21 +61,25 @@ export function HeroCanvasScroll() {
     const ctx = canvas.getContext("2d", { alpha: false })
     if (!ctx) return
 
-    const img = imagesRef.current[frameIndex]
+    const img = getNearestLoadedFrame(frameIndex)
     if (!img || !img.complete || img.naturalWidth === 0) return
 
-    const dpr = Math.max(window.devicePixelRatio || 1, 2) // Retina 2x rendering for ultra-sharp frames
+    const dpr = Math.max(window.devicePixelRatio || 1, 2)
     const displayWidth = window.innerWidth
     const displayHeight = window.innerHeight
 
-    if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
+    // Only update canvas buffer dimensions when viewport or dpr actually changes
+    const dim = dimensionsRef.current
+    if (dim.w !== displayWidth || dim.h !== displayHeight || dim.dpr !== dpr) {
+      dim.w = displayWidth
+      dim.h = displayHeight
+      dim.dpr = dpr
       canvas.width = displayWidth * dpr
       canvas.height = displayHeight * dpr
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.imageSmoothingEnabled = true
+      ctx.imageSmoothingQuality = "high"
     }
-
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    ctx.imageSmoothingEnabled = true
-    ctx.imageSmoothingQuality = "high"
 
     // True Object-Cover fill logic (Zero black bars top, bottom, left or right)
     const imgAspect = img.naturalWidth / img.naturalHeight
@@ -75,45 +100,67 @@ export function HeroCanvasScroll() {
     const offsetY = (displayHeight - renderH) / 2
 
     ctx.drawImage(img, offsetX, offsetY, renderW, renderH)
-  }, [])
+    lastDrawnFrameRef.current = frameIndex
+  }, [getNearestLoadedFrame])
 
-  // Two-tier async image preloading for smooth frame decoding
+  // Instant Tiered Preloading:
+  // 1. Frame 0 loads FIRST (only 25KB WebP, ~15ms). Canvas appears INSTANTLY.
+  // 2. Initial batch (0-15) loads immediately for instant scrolling.
+  // 3. Remaining frames stream in chunks in the background without blocking main thread.
   useEffect(() => {
-    let loadedCount = 0
-    const loadedImages: HTMLImageElement[] = new Array(FRAME_COUNT)
+    const loadedImages: (HTMLImageElement | null)[] = new Array(FRAME_COUNT).fill(null)
+    imagesRef.current = loadedImages
 
-    // Tier 1: Preload initial 25 frames for immediate playback
-    for (let i = 0; i < INITIAL_PRELOAD_COUNT; i++) {
+    // Instant Load Frame 0 (First Viewport)
+    const firstImg = new Image()
+    firstImg.decoding = "async"
+    firstImg.src = getFrameUrl(0)
+    firstImg.onload = () => {
+      loadedImages[0] = firstImg
+      setImagesLoaded(true)
+      requestAnimationFrame(() => drawFrame(0))
+    }
+
+    // Tier 1: Priority batch for early scroll travel
+    for (let i = 1; i < PRIORITY_FRAME_BATCH; i++) {
       const img = new Image()
       img.decoding = "async"
       img.src = getFrameUrl(i)
       img.onload = () => {
-        loadedCount++
-        setLoadProgress(Math.round((loadedCount / FRAME_COUNT) * 100))
-        if (loadedCount >= INITIAL_PRELOAD_COUNT) {
-          setImagesLoaded(true)
-        }
+        loadedImages[i] = img
       }
       loadedImages[i] = img
     }
 
-    // Tier 2: Stream remaining frames
-    const timer = setTimeout(() => {
-      for (let i = INITIAL_PRELOAD_COUNT; i < FRAME_COUNT; i++) {
+    // Tier 2: Stream remaining frames in chunks
+    let chunkIndex = PRIORITY_FRAME_BATCH
+    const CHUNK_SIZE = 15
+
+    const loadNextChunk = () => {
+      if (chunkIndex >= FRAME_COUNT) return
+      const end = Math.min(chunkIndex + CHUNK_SIZE, FRAME_COUNT)
+      for (let i = chunkIndex; i < end; i++) {
         const img = new Image()
         img.decoding = "async"
         img.src = getFrameUrl(i)
         img.onload = () => {
-          loadedCount++
-          setLoadProgress(Math.round((loadedCount / FRAME_COUNT) * 100))
+          loadedImages[i] = img
         }
-        loadedImages[i] = img
       }
-    }, 40)
+      chunkIndex = end
+      if (chunkIndex < FRAME_COUNT) {
+        if ("requestIdleCallback" in window) {
+          window.requestIdleCallback(loadNextChunk, { timeout: 100 })
+        } else {
+          setTimeout(loadNextChunk, 20)
+        }
+      }
+    }
 
-    imagesRef.current = loadedImages
-    return () => clearTimeout(timer)
-  }, [])
+    const streamTimer = setTimeout(loadNextChunk, 50)
+
+    return () => clearTimeout(streamTimer)
+  }, [drawFrame])
 
   // Scroll listener: Monotonic exit trigger at 60% progress (EXIT_START = 0.60, EXIT_END = 0.66)
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
@@ -135,12 +182,12 @@ export function HeroCanvasScroll() {
     if (animFrameIdRef.current === null) {
       const renderLoop = () => {
         const diff = targetFrameRef.current - currentRenderedFrameRef.current
-        if (Math.abs(diff) < 0.3) {
+        if (Math.abs(diff) < 0.2) {
           currentRenderedFrameRef.current = targetFrameRef.current
-          drawFrame(currentRenderedFrameRef.current)
+          drawFrame(Math.round(currentRenderedFrameRef.current))
           animFrameIdRef.current = null
         } else {
-          currentRenderedFrameRef.current += diff * 0.35
+          currentRenderedFrameRef.current += diff * 0.45 // Snappy 0.45 lerp factor for butter-smooth response
           drawFrame(Math.round(currentRenderedFrameRef.current))
           animFrameIdRef.current = requestAnimationFrame(renderLoop)
         }
@@ -149,16 +196,10 @@ export function HeroCanvasScroll() {
     }
   })
 
-  // Initial draw once tier-1 images load
-  useEffect(() => {
-    if (imagesLoaded) {
-      drawFrame(0)
-    }
-  }, [imagesLoaded, drawFrame])
-
-  // Handle window resize
+  // Handle window resize with cached dimension reset
   useEffect(() => {
     const handleResize = () => {
+      dimensionsRef.current = { w: 0, h: 0, dpr: 1 } // Invalidate cached dimensions
       drawFrame(Math.round(currentRenderedFrameRef.current))
     }
     window.addEventListener("resize", handleResize, { passive: true })

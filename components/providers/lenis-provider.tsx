@@ -19,12 +19,13 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       autoResize: true,
     })
 
+    let rafId: number
     function raf(time: number) {
       lenis.raf(time)
-      requestAnimationFrame(raf)
+      rafId = requestAnimationFrame(raf)
     }
 
-    const rafId = requestAnimationFrame(raf)
+    rafId = requestAnimationFrame(raf)
 
     // Recalculate scroll dimensions on window resize and route change
     const resizeObserver = new ResizeObserver(() => {

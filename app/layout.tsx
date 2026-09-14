@@ -144,6 +144,14 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link
+          rel="preload"
+          as="image"
+          href="/frames/webp/frame_0001.webp"
+          type="image/webp"
+          // @ts-expect-error fetchpriority is standard in modern browsers
+          fetchpriority="high"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -156,29 +164,29 @@ export default function RootLayout({
           }}
         />
       </head>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=G-GDS3P2MY0B`}
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-GDS3P2MY0B');
-        `}
-      </Script>
-      <Script
-        id="json-ld-person"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdPerson) }}
-      />
-      <Script
-        id="json-ld-website"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebsite) }}
-      />
       <body className="min-h-full flex flex-col bg-[#0c0c0e] text-white">
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=G-GDS3P2MY0B`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-GDS3P2MY0B');
+          `}
+        </Script>
+        <Script
+          id="json-ld-person"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdPerson) }}
+        />
+        <Script
+          id="json-ld-website"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebsite) }}
+        />
         <LenisProvider>
           <Preloader />
           <ThemeProvider>
