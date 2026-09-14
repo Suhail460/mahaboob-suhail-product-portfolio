@@ -6,6 +6,7 @@ import { LenisProvider } from "@/components/providers/lenis-provider"
 import { Preloader } from "@/components/ui/preloader"
 import { Navbar } from "@/components/layout/navbar"
 import { SplashCursor } from "@/components/ui/splash-cursor"
+import { TargetCursor } from "@/components/ui/target-cursor"
 import { Analytics } from "@vercel/analytics/next"
 import Script from "next/script"
 
@@ -136,6 +137,7 @@ export default function RootLayout({
           <Preloader />
           <ThemeProvider>
             <SplashCursor />
+            <TargetCursor spinDuration={2} hideDefaultCursor={true} parallaxOn={true} cursorColor="#e58e39" cursorColorOnTarget="#fcd34d" />
             <Navbar />
             {children}
           </ThemeProvider>
